@@ -4,7 +4,9 @@ import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.ImageDecoder
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -13,15 +15,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
+import androidx.annotation.RequiresApi
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.net.toFile
 import com.bumptech.glide.Glide
 import retrofit2.http.Url
 import java.io.InputStream
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ListAdapter (val context: Context, val dataList: ArrayList<LstData>) : BaseAdapter(){
     override fun getCount(): Int {
@@ -36,30 +43,69 @@ class ListAdapter (val context: Context, val dataList: ArrayList<LstData>) : Bas
         return 0
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View = LayoutInflater.from(context).inflate(R.layout.list_item,null)
 
+        val mimagelay = view.findViewById<LinearLayout>(R.id.lst_item_img_lay)
         val mimage = view.findViewById<ImageView>(R.id.lst_item_img)
         val mtitle = view.findViewById<TextView>(R.id.lst_item_mtitle)
         val stitle = view.findViewById<TextView>(R.id.lst_item_stitle)
         val prgsbar = view.findViewById<ProgressBar>(R.id.prgssbar)
         val persent = view.findViewById<TextView>(R.id.lst_item_persent)
+        val organization = view.findViewById<TextView>(R.id.lst_item_organi)
+        val organiround = view.findViewById<LinearLayout>(R.id.lst_item_typeround)
+        val btn_donate = view.findViewById<Button>(R.id.btn_donate)
+        val process = view.findViewById<TextView>(R.id.lst_item_process)
         val data = dataList[position]
 
-//            var uri:Uri = Uri.parse("https://bigwalk-dev.s3.ap-northeast-2.amazonaws.com/campaign/242/thumbnail/8D3q1-detail.jpg")
-//            val source = ImageDecoder.createSource(context.contentResolver,uri)
-//            val bit:Bitmap = ImageDecoder.decodeBitmap(source)
-//            mimage.setImageBitmap(bit)
-//            Log.i("여기",source.toString())
+        var sf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        var date = sf.parse(data.endDateD)
 
+        var today = Calendar.getInstance()
+        var calcuDate = (today.time.time - date.time) / (60 * 60 * 24 * 1000)
 
-//        mimage.setImageURI(uri)
+        if(calcuDate>0){
+            if(data.story == true){
+                process.text = "기부완료"
+                process.setTextColor(0xFF8B00FF.toInt())
+            }else{
+                process.text = "종료"
+                process.setTextColor(Color.RED)
+                mimagelay.setBackgroundResource(R.drawable.resultpost)
+            }
+        }else{
+            process.text = "진행중"
+            process.setTextColor(0xFF4379E6.toInt())
+        }
 
+        if(data.status == "END"){
+            mimage.alpha = 0.3F
+            mtitle.alpha = 0.3F
+            stitle.alpha = 0.3F
+            btn_donate.visibility = View.GONE
+        }
+        if(data.organization.toString().equals("[]")){
+            organization.text = "공개형"
+            organiround.background = R.drawable.public_round.toDrawable()
+            organiround.setBackgroundColor(0xFF01AB9E.toInt())//Drawable로 강제변환해서 그런지 색상이 깨짐 그래서 넣음
+        }else{
+            organization.text = "기업형"
+            organiround.background =R.drawable.company_round.toDrawable()
+            organiround.setBackgroundColor(0xFFFCCC4E.toInt())
+        }
         Glide.with(context).load(data.mainImage).into(mimage)
         mtitle.text = data.mTitle
         stitle.text = data.sTitle
-        persent.text = data.ratio.toString()
+        persent.text = data.ratio.toString()+"%"
         prgsbar.progress = data.ratio
+
+
+
         return view
+    }
+
+    fun process(){
+
     }
 }

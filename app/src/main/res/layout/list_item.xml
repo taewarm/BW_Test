@@ -4,13 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
+        android:id="@+id/lst_item_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="5">
         <LinearLayout
+            android:id="@+id/lst_item_img_lay"
             android:layout_width="1dp"
-            android:layout_height="100dp"
+            android:layout_height="120dp"
             android:layout_weight="1">
             <ImageView
                 android:id="@+id/lst_item_img"
@@ -33,7 +35,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_weight="1"
-                    android:text="메인제목"/>
+                    android:text="메인제목"
+                    android:textColor="#000000"
+                    android:textStyle="bold"/>
                 <TextView
                     android:id="@+id/lst_item_stitle"
                     android:layout_width="match_parent"
@@ -46,30 +50,64 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_weight="0.7"
-                    android:orientation="horizontal"/>
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:id="@+id/lst_item_typeround"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/company_round">
+                        <TextView
+                            android:id="@+id/lst_item_organi"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="기업형"
+                            android:padding="3dp"
+                            android:textSize="10dp"
+                            android:textColor="@color/white"/>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/lst_item_progress"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:weightSum="2"
                 android:orientation="vertical">
-                <TextView
-                    android:id="@+id/lst_item_persent"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_weight="1"
-                    android:textSize="10dp"
-                    android:gravity="right"
-                    android:text="%"/>
-                <ProgressBar
-                    android:id="@+id/prgssbar"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:weightSum="2">
+                    <TextView
+                        android:id="@+id/lst_item_persent"
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:textSize="20dp"
+                        android:gravity="left"
+                        android:text="%"
+                        android:textColor="#4379E6"/>
+                    <TextView
+                        android:id="@+id/lst_item_process"
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:textSize="20dp"
+                        android:gravity="right"
+                        android:text="진행도"/>
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:progressTint="@color/black"/>
+                    android:layout_weight="1">
+                    <ProgressBar
+                        android:id="@+id/prgssbar"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:progressTint="#4379E6"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -77,11 +115,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
             <Button
+                android:id="@+id/btn_donate"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/button_round"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                android:background="@drawable/donate"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
