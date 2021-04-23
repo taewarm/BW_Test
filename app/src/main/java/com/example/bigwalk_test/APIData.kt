@@ -12,7 +12,7 @@ data class APIData(
         val startDate:String,
         val ratio:Int,
         val donatedSteps:Int,
-        val organizations:Object,
+        val organizations: Any,
         val goalPoint:Int,
         val detailThumbnailImagePath:String,
         val largeListThumbnailImagePath:String,
@@ -24,12 +24,12 @@ data class APIData(
         val beneficiaryBtn:String,
         val categoryId:Int,
         val smsId:Int,
-        val campaignPromoter:Object,
+        val campaignPromoter: Campaign,
         val formattedStartDate:String,
         val formattedEndDate:String,
         val name:String,
-        val my:Object,
-        val event:Object,
-        val service:Object
+        val my: My,
+        val event: Any,
+        val service: Service
 
     )

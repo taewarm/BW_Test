@@ -9,7 +9,7 @@ class LstData (
     val mainImage: String,
     val ratio: Int,
     val status: String,
-    val organization:Object,
+    val organization: Any,
     val endDateD:String,
     val story:Boolean
         )

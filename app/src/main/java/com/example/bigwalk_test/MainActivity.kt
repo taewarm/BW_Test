@@ -1,13 +1,15 @@
 package com.example.bigwalk_test
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.LinearLayout
-import android.widget.ListView
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,7 +21,8 @@ import kotlin.collections.ArrayList
 class MainActivity : AppCompatActivity() {
     var data = arrayListOf<LstData>()
     val dataAdapter = ListAdapter(this,data)
-
+    var type:Boolean = true
+    lateinit var hdataAdapter : HListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -27,8 +30,50 @@ class MainActivity : AppCompatActivity() {
         nanumlist.adapter = dataAdapter
         ListApi()
         Scrollmenu()
+        initRecyclerView()
+        Checkdata()
+        Division()
     }
 
+    fun Division(){
+        val campain = findViewById<LinearLayout>(R.id.campain)
+        val campainLine = findViewById<LinearLayout>(R.id.campainline)
+        val post = findViewById<LinearLayout>(R.id.post)
+        val postLine = findViewById<LinearLayout>(R.id.postline)
+
+        campain.setOnClickListener {
+            type = true
+            campainLine.setBackgroundColor(Color.BLACK)
+            postLine.setBackgroundColor(Color.WHITE)
+            data.clear()
+            ListApi()
+            dataAdapter.notifyDataSetChanged()
+        }
+        post.setOnClickListener {
+            type = false
+            campainLine.setBackgroundColor(Color.WHITE)
+            postLine.setBackgroundColor(Color.BLACK)
+            data.clear()
+            ListApi()
+            dataAdapter.notifyDataSetChanged()
+        }
+
+    }
+
+    fun Checkdata(){
+        val mimage = intent.getStringExtra("mImage").toString()
+        val mtitle = intent.getStringExtra("mTitle").toString()
+        if(mtitle != "null"){
+            hdataAdapter.datas.add(HLstData(mimage,mtitle))
+            hdataAdapter.notifyDataSetChanged()
+        }
+    }
+    fun initRecyclerView(){
+        var hnanumlist = findViewById<RecyclerView>(R.id.h_lst)
+        hdataAdapter = HListAdapter(this)
+        hnanumlist.layoutManager = LinearLayoutManager(this).also { it.orientation = LinearLayoutManager.HORIZONTAL }
+        hnanumlist.adapter = hdataAdapter
+    }
     fun ListApi() {
         val retrofit = Retrofit.Builder()
                 .baseUrl("https://app-dev.bigwalk.co.kr:10000/")
@@ -41,29 +86,32 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<List<APIData>>, response: Response<List<APIData>>) {
                 Log.i("여기",response.body()?.get(0).toString())
                 Log.i("여기",response.body()?.size.toString())
-                var sTitleList:List<String>
                 var myList:List<String>
                 var storyy:String
                 for (i in 0..response.body()!!.size-1){
                     Log.i("여기",response.body()?.get(i).toString())
                     var lst_image =response.body()?.get(i)?.smallListThumbnailImagePath!!
                     var mTitle:String = response.body()?.get(i)?.name!!
-                    var sTitle:String = response.body()?.get(i)?.campaignPromoter.toString()
+                    var sTitle:Campaign = response.body()?.get(i)?.campaignPromoter!!
                     var ratio:Int = response.body()?.get(i)?.ratio!!
                     var status:String = response.body()?.get(i)?.status!!
-                    var organi:Object = response.body()?.get(i)?.organizations!!
-                    var stroy:Object = response.body()?.get(i)?.my!!
+                    var organi: Any = response.body()?.get(i)?.organizations!!
+                    var stroy: My = response.body()?.get(i)?.my!!
                     var endDate: String = response.body()?.get(i)?.endDate!!
+                    var service: Service? = response.body()?.get(i)?.service
                     endDate = endDate.replace("T"," ")
-                    sTitleList = sTitle.split(",")
-                    myList = stroy.toString().split(", ")
-                    storyy = myList[3].replace("story","")
-                    storyy = storyy.replace("}","")
-                    var sstory:Boolean = storyy.toBoolean()
-                    Log.i("log",myList[3])
-
                     //object데이터형식을 가져올때 이렇게 밖에 안되나 방안 찾기
-                    data.add(LstData(mTitle,sTitleList[0].substring(6,sTitleList[0].length),lst_image,ratio,status,organi,endDate,sstory))
+                    if(type == true){
+                        if(organi.toString().length==2){
+//                            Log.i("log",organi.id.toString())
+                            data.add(LstData(mTitle,sTitle.name,lst_image,ratio,status,organi.toString(),endDate,stroy.story))
+                        }
+                    }else{
+                        if(organi.toString().length>3){
+                            data.add(LstData(mTitle,sTitle.name,lst_image,ratio,status,organi.toString(),endDate,stroy.story))
+                        }
+                    }
+
                     var lst_main = findViewById<LinearLayout>(R.id.lst_item_main)
                     lst_main?.setBackgroundColor(Color.TRANSPARENT)
                 }
@@ -240,5 +288,11 @@ class MainActivity : AppCompatActivity() {
             scl_env.background = null
             txt_env.setTextColor(Color.GRAY)
         }
+    }
+
+    fun Recyclerinit(){
+        val recycler = findViewById<RecyclerView>(R.id.h_lst)
+        val layoutmanager:LinearLayoutManager ?= null
+        layoutmanager?.orientation = LinearLayoutManager.HORIZONTAL
     }
 }

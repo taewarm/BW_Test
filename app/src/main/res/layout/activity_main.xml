@@ -37,6 +37,7 @@
                     android:orientation="horizontal"
                     android:layout_marginLeft="80dp">
                     <LinearLayout
+                        android:id="@+id/campain"
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -51,12 +52,15 @@
                             android:textStyle="bold"
                             android:textSize="30dp"/>
                         <LinearLayout
+                            android:id="@+id/campainline"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_weight="1"
-                            android:background="#000000"/>
+                            android:background="#000000"
+                            android:orientation="horizontal"/>
                     </LinearLayout>
                     <LinearLayout
+                        android:id="@+id/post"
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -71,10 +75,12 @@
                             android:textStyle="bold"
                             android:textSize="30dp"/>
                         <LinearLayout
+                            android:id="@+id/postline"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_weight="1"
-                            android:background="#FFFFFF"/>
+                            android:background="#FFFFFF"
+                            android:orientation="horizontal"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -87,27 +93,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="내가 참여한 캠페인"/>
-                <HorizontalScrollView
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/h_lst"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <LinearLayout
-                            android:layout_width="130dp"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:id="@+id/join_cam"
-                                android:layout_width="match_parent"
-                                android:layout_height="90dp"/>
-                            <TextView
-                                android:id="@+id/join_text"
-                                android:layout_width="match_parent"
-                                android:layout_height="30dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </HorizontalScrollView>
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal">
+
+                </androidx.recyclerview.widget.RecyclerView>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
